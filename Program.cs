@@ -53,11 +53,19 @@ namespace UnityBuildMonitor
             }
             DumpNew(LogFile, filePos);
             Environment.ExitCode = proc.ExitCode;
-            Console.Out.WriteLine("Process has finished! Execution time: " + (proc.ExitTime - proc.StartTime));
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("Process has finished! Execution time: " + (proc.ExitTime - proc.StartTime));
 
             // Remove the log file
-            if (File.Exists(LogFile))
-                File.Delete(LogFile);
+            try
+            {
+                if (File.Exists(LogFile))
+                    File.Delete(LogFile);
+            }
+            catch(IOException e)
+            {
+                Console.Error.WriteLine("Could not remove the log file! Exception: " + e.Message);
+            }
         }
 
         public static long DumpNew(string path, long seek)
